@@ -1,4 +1,4 @@
-inf331-grupo-1
+_Inf331-Grupo 1_
 # 🚀 CrowdStarter
 Plataforma web de crowdfunding donde personas y organizaciones publican
 proyectos y reciben financiamiento directamente de una comunidad.

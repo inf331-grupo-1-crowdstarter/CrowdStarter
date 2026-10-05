@@ -10,8 +10,8 @@ Reducir las barreras para financiar nuevas ideas, con transparencia
 y confianza entre creadores y aportantes.
 
 ## 🔗 Enlaces
-- 📦 [Repositorio principal](https://github.com/inf331-grupo-1)
-- 📚 [Wiki del proyecto](https://github.com/inf331-grupo-1/wiki)
+- 📦 [Repositorio principal](https://github.com/inf331-grupo-1-crowdstarter/CrowdStarter)
+- 📚 [Wiki del proyecto](https://github.com/inf331-grupo-1-crowdstarter/CrowdStarter/wiki)
 - 🎥 Video Entrega 1: _(pendiente)_
 
 ## 👥 Equipo

@@ -3,7 +3,7 @@ _Inf331-Grupo 1_
 Plataforma web de crowdfunding donde personas y organizaciones publican
 proyectos y reciben financiamiento directamente de una comunidad.
 
-   Idea → Comunidad → Validación → Financiamiento → Proyecto
+> Idea → Comunidad → Validación → Financiamiento → Proyecto
 
 ## 🎯 Propósito
 Reducir las barreras para financiar nuevas ideas, con transparencia

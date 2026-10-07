@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.forms import AuthenticationForm
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Correo electrónico")
@@ -27,3 +27,16 @@ class RegisterForm(UserCreationForm):
             user.save()
 
         return user
+
+class LoginForm(AuthenticationForm):
+    username = forms.EmailField(
+        label="Correo electrónico",
+        widget=forms.EmailInput(
+            attrs={"autocomplete": "email"}
+        ),
+    )
+
+    error_messages = {
+        "invalid_login": "Correo o contraseña incorrectos.",
+        "inactive": "Esta cuenta está inactiva.",
+    }

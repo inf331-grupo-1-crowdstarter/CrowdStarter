@@ -20,5 +20,4 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("campaigns.urls")),
-    path("cuenta/", include("django.contrib.auth.urls")),
 ]

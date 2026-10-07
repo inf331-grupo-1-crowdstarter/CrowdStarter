@@ -1,9 +1,17 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm
-from .forms import LoginForm, RegisterForm
+from django.contrib.auth.views import redirect_to_login
+from django.core.paginator import Paginator
+from django.db import transaction
+from django.db.models import F
+from django.http import Http404, HttpResponseForbidden, HttpResponseNotAllowed
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
+from .forms import CampaignForm, ContributionForm, LoginForm, RegisterForm
+from .models import Campaign, Category, Contribution
 
 def register(request):
     if request.user.is_authenticated:
@@ -60,10 +68,6 @@ def protected_view(request):
 def home(request):
     return campaign_list(request)
 
-from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404
-from .models import Campaign, Category
-
 
 def campaign_list(request):
     Campaign.expire_overdue()
@@ -92,15 +96,8 @@ def campaign_detail(request, pk):
     Campaign.expire_overdue()
     campaign = get_object_or_404(Campaign, pk=pk)
     if campaign.status == Campaign.Status.BORRADOR and campaign.creator_id != request.user.pk:
-        from django.http import Http404
         raise Http404
-    return render(request, "campaigns/detail.html", {"campaign": campaign})
-
-
-from .forms import CampaignForm
-from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden
-from django.utils import timezone
+    return render(request, "campaigns/detail.html", {"campaign": campaign, "contribution_form": ContributionForm()})
 
 
 @login_required
@@ -127,9 +124,6 @@ def campaign_publish(request, pk):
     return redirect(campaign)
 
 
-from django.db import transaction
-
-
 @login_required
 def campaign_edit(request, pk):
     Campaign.expire_overdue()
@@ -147,3 +141,44 @@ def campaign_edit(request, pk):
             messages.success(request, "Campaña actualizada correctamente.")
             return redirect(campaign)
     return render(request, "campaigns/form.html", {"form": form, "campaign": campaign, "heading": "Editar campaña"})
+
+
+@login_required
+def campaign_delete(request, pk):
+    with transaction.atomic():
+        campaign = get_object_or_404(Campaign.objects.select_for_update(), pk=pk, creator=request.user)
+        if request.method == "POST":
+            if campaign.contributions.exists():
+                return HttpResponseForbidden("No puedes eliminar una campaña con aportes.")
+            campaign.delete()
+            messages.success(request, "Campaña eliminada correctamente.")
+            return redirect("campaign_list")
+    return render(request, "campaigns/confirm_delete.html", {"campaign": campaign})
+
+
+def campaign_contribute(request, pk):
+    campaign = get_object_or_404(Campaign, pk=pk)
+    if campaign.status == Campaign.Status.BORRADOR and campaign.creator_id != request.user.pk:
+        raise Http404
+    if not request.user.is_authenticated:
+        return redirect_to_login(campaign.get_absolute_url())
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+    Campaign.expire_overdue()
+    with transaction.atomic():
+        # Acquire SQLite's write lock before reading totals (select_for_update is a no-op there).
+        Campaign.objects.filter(pk=pk).update(updated_at=F("updated_at"))
+        campaign = get_object_or_404(Campaign.objects.select_for_update(), pk=pk)
+        if campaign.creator_id == request.user.pk:
+            return HttpResponseForbidden("No puedes aportar a tu propia campaña.")
+        if not campaign.accepts_contributions:
+            return HttpResponseForbidden("Esta campaña no acepta aportes.")
+        form = ContributionForm(request.POST)
+        if form.is_valid():
+            Contribution.objects.create(campaign=campaign, user=request.user, amount=form.cleaned_data["amount"])
+            if campaign.raised_amount >= campaign.funding_goal:
+                campaign.status = Campaign.Status.FINANCIADA
+                campaign.save(update_fields=["status", "updated_at"])
+            messages.success(request, "Aporte simulado registrado correctamente. No se realizó ningún cobro real.")
+            return redirect(campaign)
+    return render(request, "campaigns/detail.html", {"campaign": campaign, "contribution_form": form})

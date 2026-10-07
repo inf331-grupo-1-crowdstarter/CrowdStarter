@@ -9,3 +9,7 @@ urlpatterns = [
     path("logout/", views.user_logout, name="logout"),
     path("protegido/", views.protected_view, name="protected"),
 ]
+urlpatterns += [
+    path("campanas/", views.campaign_list, name="campaign_list"),
+    path("campanas/<int:pk>/", views.campaign_detail, name="campaign_detail"),
+]

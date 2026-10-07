@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm
 from .forms import LoginForm, RegisterForm
 
 def register(request):
@@ -58,4 +57,24 @@ def protected_view(request):
     return render(request, "protected.html")
 
 def home(request):
-    return render(request, "home.html")
+    return campaign_list(request)
+
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
+from .models import Campaign
+
+
+def campaign_list(request):
+    Campaign.expire_overdue()
+    campaigns = Campaign.objects.exclude(status=Campaign.Status.BORRADOR).select_related("category")
+    page = Paginator(campaigns, 10).get_page(request.GET.get("page"))
+    return render(request, "campaigns/list.html", {"page_obj": page})
+
+
+def campaign_detail(request, pk):
+    Campaign.expire_overdue()
+    campaign = get_object_or_404(Campaign, pk=pk)
+    if campaign.status == Campaign.Status.BORRADOR and campaign.creator_id != request.user.pk:
+        from django.http import Http404
+        raise Http404
+    return render(request, "campaigns/detail.html", {"campaign": campaign})

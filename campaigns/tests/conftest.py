@@ -25,3 +25,25 @@ def campaign_factory(owner, category):
         data.update(kwargs)
         return Campaign.objects.create(**data)
     return make
+
+@pytest.fixture
+def valid_data(category):
+    return dict(title="Nueva campaña", description="Una descripción", category=category.pk,
+                funding_goal="1500.00", deadline=str(timezone.localdate()+timedelta(days=10)))
+
+@pytest.fixture
+def image_file():
+    def make(fmt="PNG", name="image.png", size=None):
+        from io import BytesIO
+        from PIL import Image
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        data = BytesIO()
+        Image.new("RGB", (10, 10), "blue").save(data, format=fmt)
+        content = data.getvalue()
+        if size: content += b" " * max(0, size-len(content))
+        return SimpleUploadedFile(name, content, content_type="image/"+fmt.lower())
+    return make
+
+@pytest.fixture(autouse=True)
+def isolated_media(settings, tmp_path):
+    settings.MEDIA_ROOT = tmp_path / "media"

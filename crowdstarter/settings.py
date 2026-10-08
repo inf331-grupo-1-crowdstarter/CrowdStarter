@@ -106,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "America/Santiago"
 
 USE_I18N = True
 
@@ -131,4 +131,3 @@ MAILERS = {
 LOGIN_URL = "login"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-TIME_ZONE = "America/Santiago"

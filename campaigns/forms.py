@@ -1,7 +1,12 @@
+from decimal import Decimal
+
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
+from django.utils import timezone
+
+from .models import Campaign
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Correo electrónico")
@@ -41,9 +46,6 @@ class LoginForm(AuthenticationForm):
         "inactive": "Esta cuenta está inactiva.",
     }
 
-from decimal import Decimal
-from django.utils import timezone
-from .models import Campaign
 
 
 class CampaignForm(forms.ModelForm):
@@ -63,12 +65,15 @@ class CampaignForm(forms.ModelForm):
         goal = self.cleaned_data["funding_goal"]
         if goal <= 0:
             raise forms.ValidationError("La meta debe ser mayor a cero.")
+        if self.instance.pk and goal < self.instance.raised_amount:
+            raise forms.ValidationError("La meta no puede ser inferior al monto recaudado.")
         return goal
 
     def clean_deadline(self):
         deadline = self.cleaned_data["deadline"]
-        if deadline <= timezone.localdate():
-            raise forms.ValidationError("La fecha límite debe ser futura.")
+        today = timezone.localdate()
+        if deadline < today or (not self.instance.pk and deadline == today):
+            raise forms.ValidationError("La fecha límite debe ser futura al crear y no pasada al editar.")
         return deadline
 
     def clean_image(self):
@@ -79,3 +84,9 @@ class CampaignForm(forms.ModelForm):
             if image.image.format not in {"JPEG", "PNG"} or image.name.rsplit(".", 1)[-1].lower() not in {"jpg", "jpeg", "png"}:
                 raise forms.ValidationError("Solo se permiten imágenes JPG o PNG.")
         return image
+
+
+class ContributionForm(forms.Form):
+    amount = forms.DecimalField(label="Monto del aporte simulado", max_digits=12, decimal_places=2,
+                                min_value=Decimal("0.01"),
+                                widget=forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}))

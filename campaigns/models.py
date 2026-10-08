@@ -44,11 +44,12 @@ class Campaign(models.Model):
 
     @property
     def raised_amount(self):
-        return self.contributions.aggregate(total=Sum("amount"))["total"] or Decimal("0.00")
+        total = self.contributions.aggregate(total=Sum("amount"))["total"] or Decimal("0.00")
+        return total.quantize(Decimal("0.01"))
 
     @property
     def progress(self):
-        return self.raised_amount * 100 / self.funding_goal if self.funding_goal else Decimal("0")
+        return self.raised_amount * 100 / Decimal(self.funding_goal) if self.funding_goal else Decimal("0")
 
     @property
     def image_url(self):
@@ -64,6 +65,10 @@ class Campaign(models.Model):
             except (OSError, ValueError):
                 pass
         return static("campaigns/default.svg")
+
+    @property
+    def accepts_contributions(self):
+        return self.status == self.Status.ACTIVA and self.deadline >= timezone.localdate()
 
     @classmethod
     def expire_overdue(cls):

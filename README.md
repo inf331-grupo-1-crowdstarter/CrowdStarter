@@ -18,8 +18,8 @@ y confianza entre creadores y aportantes.
 | Integrante | Rol |
 |---|---|
 | Aylin Rojas | Líder / Kanban master |
-| Nombre 2 | Dev backend |
-| Nombre 3 | Dev frontend + QA |
+| Sebastián Castillo | Dev backend |
+| Vicente Illane | Dev frontend + QA |
 
 ## 🛠️ Tecnologías
 Python (Django) · Bootstrap · SQLite/PostgreSQL · PyTest · GitHub Actions · Playwright

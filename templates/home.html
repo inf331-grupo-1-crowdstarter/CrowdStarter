@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CrowdStarter</title>
+</head>
+<body>
+    <h1>CrowdStarter</h1>
+
+    {% if user.is_authenticated %}
+        <p>Sesión iniciada como {{ user.email }}</p>
+
+        <a href="{% url 'protected' %}">Área protegida</a>
+        <a href="{% url 'logout' %}">Cerrar sesión</a>
+    {% else %}
+        <a href="{% url 'login' %}">Iniciar sesión</a>
+        <a href="{% url 'register' %}">Registrarse</a>
+    {% endif %}
+</body>
+</html>

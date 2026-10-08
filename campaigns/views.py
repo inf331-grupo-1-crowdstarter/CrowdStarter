@@ -147,16 +147,3 @@ def campaign_edit(request, pk):
             messages.success(request, "Campaña actualizada correctamente.")
             return redirect(campaign)
     return render(request, "campaigns/form.html", {"form": form, "campaign": campaign, "heading": "Editar campaña"})
-
-
-@login_required
-def campaign_delete(request, pk):
-    with transaction.atomic():
-        campaign = get_object_or_404(Campaign.objects.select_for_update(), pk=pk, creator=request.user)
-        if request.method == "POST":
-            if campaign.contributions.exists():
-                return HttpResponseForbidden("No puedes eliminar una campaña con aportes.")
-            campaign.delete()
-            messages.success(request, "Campaña eliminada correctamente.")
-            return redirect("campaign_list")
-    return render(request, "campaigns/confirm_delete.html", {"campaign": campaign})

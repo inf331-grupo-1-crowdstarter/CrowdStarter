@@ -63,15 +63,12 @@ class CampaignForm(forms.ModelForm):
         goal = self.cleaned_data["funding_goal"]
         if goal <= 0:
             raise forms.ValidationError("La meta debe ser mayor a cero.")
-        if self.instance.pk and goal < self.instance.raised_amount:
-            raise forms.ValidationError("La meta no puede ser inferior al monto recaudado.")
         return goal
 
     def clean_deadline(self):
         deadline = self.cleaned_data["deadline"]
-        today = timezone.localdate()
-        if deadline < today or (not self.instance.pk and deadline == today):
-            raise forms.ValidationError("La fecha límite debe ser futura al crear y no pasada al editar.")
+        if deadline <= timezone.localdate():
+            raise forms.ValidationError("La fecha límite debe ser futura.")
         return deadline
 
     def clean_image(self):

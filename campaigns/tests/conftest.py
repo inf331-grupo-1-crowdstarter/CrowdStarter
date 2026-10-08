@@ -26,7 +26,6 @@ def campaign_factory(owner, category):
         return Campaign.objects.create(**data)
     return make
 
-
 @pytest.fixture
 def valid_data(category):
     return dict(title="Nueva campaña", description="Una descripción", category=category.pk,

@@ -95,3 +95,55 @@ def campaign_detail(request, pk):
         from django.http import Http404
         raise Http404
     return render(request, "campaigns/detail.html", {"campaign": campaign})
+
+
+from .forms import CampaignForm
+from django.views.decorators.http import require_POST
+from django.http import HttpResponseForbidden
+from django.utils import timezone
+
+
+@login_required
+def campaign_create(request):
+    form = CampaignForm(request.POST if request.method == "POST" else None, request.FILES or None)
+    if request.method == "POST" and form.is_valid():
+        campaign = form.save(commit=False)
+        campaign.creator = request.user
+        campaign.save()
+        messages.success(request, "Campaña creada correctamente como borrador.")
+        return redirect(campaign)
+    return render(request, "campaigns/form.html", {"form": form, "heading": "Crear campaña"})
+
+
+@login_required
+@require_POST
+def campaign_publish(request, pk):
+    campaign = get_object_or_404(Campaign, pk=pk, creator=request.user)
+    if campaign.status != Campaign.Status.BORRADOR or campaign.deadline <= timezone.localdate():
+        return HttpResponseForbidden("Solo se puede publicar un borrador con fecha futura.")
+    campaign.status = Campaign.Status.ACTIVA
+    campaign.save(update_fields=["status", "updated_at"])
+    messages.success(request, "Campaña publicada.")
+    return redirect(campaign)
+
+
+from django.db import transaction
+
+
+@login_required
+def campaign_edit(request, pk):
+    Campaign.expire_overdue()
+    with transaction.atomic():
+        campaign = get_object_or_404(Campaign.objects.select_for_update(), pk=pk, creator=request.user)
+        if campaign.status in {Campaign.Status.FINANCIADA, Campaign.Status.NO_FINANCIADA}:
+            return HttpResponseForbidden("Esta campaña ya está cerrada y no puede editarse.")
+        form = CampaignForm(request.POST if request.method == "POST" else None,
+                            request.FILES or None, instance=campaign)
+        if request.method == "POST" and form.is_valid():
+            campaign = form.save(commit=False)
+            if campaign.status == Campaign.Status.ACTIVA and campaign.raised_amount >= campaign.funding_goal:
+                campaign.status = Campaign.Status.FINANCIADA
+            campaign.save()
+            messages.success(request, "Campaña actualizada correctamente.")
+            return redirect(campaign)
+    return render(request, "campaigns/form.html", {"form": form, "campaign": campaign, "heading": "Editar campaña"})

@@ -52,8 +52,17 @@ class Campaign(models.Model):
 
     @property
     def image_url(self):
-        if self.image and self.image.storage.exists(self.image.name):
-            return self.image.url
+        if self.image:
+            from PIL import Image
+            try:
+                with self.image.storage.open(self.image.name, "rb") as source:
+                    with Image.open(source) as picture:
+                        if picture.format not in {"JPEG", "PNG"}:
+                            return static("campaigns/default.svg")
+                        picture.verify()
+                return self.image.url
+            except (OSError, ValueError):
+                pass
         return static("campaigns/default.svg")
 
     @classmethod

@@ -18,7 +18,9 @@ def test_ca2_ca3_ca4_filters_and_combination(client, campaign_factory, category,
     assert list(client.get(reverse("campaign_list"), data).context["page_obj"]) == [c]
 
 def test_ca5_no_results(client):
-    assert "No hay resultados" in client.get(reverse("campaign_list"), {"q": "nada"}).content.decode()
+    assert "No se encontraron campañas con esos criterios" in client.get(
+        reverse("campaign_list"), {"q": "nada"}
+    ).content.decode()
 
 def test_ca6_ca7_retention_clear_and_pagination(client, campaign_factory, category):
     for _ in range(11): campaign_factory()

@@ -24,3 +24,5 @@ urlpatterns += [path("campanas/<int:pk>/editar/", views.campaign_edit, name="cam
 urlpatterns += [path("campanas/<int:pk>/eliminar/", views.campaign_delete, name="campaign_delete")]
 
 urlpatterns += [path("campanas/<int:pk>/aportar/", views.campaign_contribute, name="campaign_contribute")]
+
+urlpatterns += [path("mis-aportes/", views.user_contribution_history, name="user_history_contributions")]

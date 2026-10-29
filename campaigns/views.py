@@ -182,3 +182,9 @@ def campaign_contribute(request, pk):
             messages.success(request, "Aporte simulado registrado correctamente. No se realizó ningún cobro real.")
             return redirect(campaign)
     return render(request, "campaigns/detail.html", {"campaign": campaign, "contribution_form": form})
+
+
+@login_required
+def user_contribution_history(request):
+    contributions = Contribution.objects.filter(user=request.user).select_related("campaign").order_by("-created_at")
+    return render(request, "user/contribution_history.html", {"contributions": contributions})

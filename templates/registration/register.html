@@ -1,17 +1,17 @@
-{% extends "base.html" %}
-
-{% block title %}Registro | CrowdStarter{% endblock %}
-
-{% block content %}
-<section class="card auth-card p-4">
-    <h1 class="section-title">Crear cuenta</h1>
-    <p class="text-muted">Únete a la comunidad que impulsa nuevas ideas.</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro | CrowdStarter</title>
+</head>
+<body>
+    <h1>Crear cuenta</h1>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
 
-        <button class="btn btn-primary w-100" type="submit">Registrarse</button>
+        <button type="submit">Registrarse</button>
     </form>
-</section>
-{% endblock %}
+</body>
+</html>

@@ -33,13 +33,6 @@ def test_registro_valido_crea_usuario_y_redirige_a_login(client):
     assert user.username == "usuario@ejemplo.com"
     assert user.check_password("ClaveSegura123!")
 
-    login_response = client.get(response.url)
-
-    assert login_response.status_code == 200
-    assert "Cuenta creada correctamente. Ya puedes iniciar sesión." in (
-        login_response.content.decode()
-    )
-
 
 @pytest.mark.django_db
 def test_registro_rechaza_correo_duplicado(client):

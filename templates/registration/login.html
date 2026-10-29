@@ -1,27 +1,28 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesión | CrowdStarter</title>
+</head>
 
-{% block title %}Iniciar sesión | CrowdStarter{% endblock %}
+<body>
+    <h1>Iniciar sesión</h1>
 
-{% block content %}
-<section class="card auth-card p-4">
-<h1 class="section-title">Iniciar sesión</h1>
-<p class="text-muted">Accede para apoyar proyectos y gestionar tus campañas.</p>
+    <form method="post">
+        {% csrf_token %}
 
-<form method="post">
-    {% csrf_token %}
+        {{ form.as_p }}
 
-    {{ form.as_p }}
+        {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
 
-    {% if next %}
-        <input type="hidden" name="next" value="{{ next }}">
-    {% endif %}
+        <button type="submit">Iniciar sesión</button>
+    </form>
 
-    <button class="btn btn-primary w-100" type="submit">Iniciar sesión</button>
-</form>
-
-<p>
-    ¿No tienes cuenta?
-    <a href="{% url 'register' %}">Registrarse</a>
-</p>
-</section>
-{% endblock %}
+    <p>
+        ¿No tienes cuenta?
+        <a href="{% url 'register' %}">Registrarse</a>
+    </p>
+</body>
+</html>

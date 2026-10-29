@@ -1,16 +1,20 @@
-    {% extends "base.html" %}
-
-    {% block content %}
-    <section class="hero mb-4">
-        <p class="text-uppercase small mb-2">Ideas que encuentran apoyo</p>
-        <h1>Haz que una gran idea empiece hoy.</h1>
-        <p class="lead">Descubre campañas, apoya proyectos y construye comunidad.</p>
-        <a class="btn btn-warning" href="{% url 'campaign_list' %}">Explorar campañas</a>
-    </section>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CrowdStarter</title>
+</head>
+<body>
+    <h1>CrowdStarter</h1>
 
     {% if user.is_authenticated %}
-        <p class="text-muted">Sesión iniciada como {{ user.email }}</p>
+        <p>Sesión iniciada como {{ user.email }}</p>
+
+        <a href="{% url 'protected' %}">Área protegida</a>
+        <a href="{% url 'logout' %}">Cerrar sesión</a>
     {% else %}
-        <p class="text-muted">¿Tienes una idea? <a href="{% url 'register' %}">Crea tu cuenta</a> y comienza.</p>
+        <a href="{% url 'login' %}">Iniciar sesión</a>
+        <a href="{% url 'register' %}">Registrarse</a>
     {% endif %}
-    {% endblock %}
+</body>
+</html>

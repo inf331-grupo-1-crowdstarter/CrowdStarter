@@ -1,28 +1,27 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Iniciar sesión | CrowdStarter</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-    <h1>Iniciar sesión</h1>
+{% block title %}Iniciar sesión | CrowdStarter{% endblock %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block content %}
+<section class="card auth-card p-4">
+<h1 class="section-title">Iniciar sesión</h1>
+<p class="text-muted">Accede para apoyar proyectos y gestionar tus campañas.</p>
 
-        {{ form.as_p }}
+<form method="post">
+    {% csrf_token %}
 
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}">
-        {% endif %}
+    {{ form.as_p }}
 
-        <button type="submit">Iniciar sesión</button>
-    </form>
+    {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
 
-    <p>
-        ¿No tienes cuenta?
-        <a href="{% url 'register' %}">Registrarse</a>
-    </p>
-</body>
-</html>
+    <button class="btn btn-primary w-100" type="submit">Iniciar sesión</button>
+</form>
+
+<p>
+    ¿No tienes cuenta?
+    <a href="{% url 'register' %}">Registrarse</a>
+</p>
+</section>
+{% endblock %}

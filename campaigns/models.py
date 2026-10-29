@@ -70,6 +70,15 @@ class Campaign(models.Model):
     def accepts_contributions(self):
         return self.status == self.Status.ACTIVA and self.deadline >= timezone.localdate()
 
+    @property
+    def can_publish_updates(self):
+        return self.status == self.Status.FINANCIADA or (
+            self.status == self.Status.ACTIVA and self.deadline >= timezone.localdate())
+
+    @property
+    def display_updates(self):
+        return self.updates.select_related("author")
+
     @classmethod
     def expire_overdue(cls):
         cls.objects.filter(status=cls.Status.ACTIVA, deadline__lt=timezone.localdate()).update(
@@ -84,3 +93,18 @@ class Contribution(models.Model):
 
     class Meta:
         constraints = [models.CheckConstraint(condition=models.Q(amount__gt=0), name="positive_contribution")]
+
+
+class CampaignUpdate(models.Model):
+    campaign = models.ForeignKey(Campaign, related_name="updates", on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    title = models.CharField(max_length=150)
+    content = models.TextField(max_length=5000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at", "-pk"]
+
+    def __str__(self):
+        return self.title

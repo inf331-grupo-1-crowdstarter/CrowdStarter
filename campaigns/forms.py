@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from .models import Campaign
+from .models import Campaign, Comment
 
 
 class RegisterForm(UserCreationForm):
@@ -90,3 +90,17 @@ class ContributionForm(forms.Form):
     amount = forms.DecimalField(label="Monto del aporte simulado", max_digits=12, decimal_places=2,
                                 min_value=Decimal("0.01"),
                                 widget=forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}))
+
+
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(
+        label="Tu comentario", max_length=1000, strip=True,
+        help_text="Máximo 1.000 caracteres.",
+        error_messages={"required": "Escribe un comentario; no puede contener solo espacios.",
+                        "max_length": "El comentario no puede superar 1.000 caracteres."},
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 3, "maxlength": 1000}),
+    )
+
+    class Meta:
+        model = Comment
+        fields = ["content"]

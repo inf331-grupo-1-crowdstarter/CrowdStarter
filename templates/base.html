@@ -15,6 +15,7 @@
             <div class="d-flex align-items-center gap-3">
                 <a class="nav-link" href="{% url 'campaign_list' %}">Explorar campañas</a>
                 {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'creator_panel' %}">Panel de campañas</a>
                     <a class="nav-link" href="{% url 'campaign_create' %}">Crear campaña</a>
                     <a class="btn btn-warning btn-sm" href="{% url 'logout' %}">Cerrar sesión</a>
                 {% else %}

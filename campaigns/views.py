@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import F
 from django.http import Http404, HttpResponseForbidden, HttpResponseNotAllowed
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, get_list_or_404
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
@@ -224,3 +224,8 @@ def comment_delete(request, pk, comment_pk):
     comment.delete()
     messages.success(request, "Comentario eliminado correctamente.")
     return redirect(campaign.get_absolute_url() + "#comentarios")
+
+@login_required
+def creator_panel(request):
+    campaigns = Campaign.objects.filter(creator=request.user).order_by("-created_at")
+    return render(request, "campaigns/creator_panel.html", {"campaigns": campaigns})

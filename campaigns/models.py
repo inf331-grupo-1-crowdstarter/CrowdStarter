@@ -70,10 +70,6 @@ class Campaign(models.Model):
     def accepts_contributions(self):
         return self.status == self.Status.ACTIVA and self.deadline >= timezone.localdate()
 
-    @property
-    def accepts_comments(self):
-        return self.status == self.Status.ACTIVA and self.deadline >= timezone.localdate()
-
     @classmethod
     def expire_overdue(cls):
         cls.objects.filter(status=cls.Status.ACTIVA, deadline__lt=timezone.localdate()).update(
@@ -88,13 +84,3 @@ class Contribution(models.Model):
 
     class Meta:
         constraints = [models.CheckConstraint(condition=models.Q(amount__gt=0), name="positive_contribution")]
-
-
-class Comment(models.Model):
-    campaign = models.ForeignKey(Campaign, related_name="comments", on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.CharField(max_length=1000)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created_at", "-pk"]

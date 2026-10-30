@@ -36,6 +36,15 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Verificar migraciones') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python manage.py makemigrations --check --dry-run
+                '''
+            }
+        }
     }
 
     post {

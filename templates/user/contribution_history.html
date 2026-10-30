@@ -3,7 +3,7 @@
 <h1>Historial de aportes</h1>
 <ul>
     {% for contribution in contributions %}
-        <li><a href="{% url 'campaign_detail' contribution.campaign.pk %}"> {{ contribution.campaign.title }} </a> - Monto: ${{ contribution.amount }} - fecha: {{ contribution.created_at|date:"d/m/Y" }}</li>
+        <li><a href="{% url 'campaign_detail' contribution.campaign.pk %}"> {{ contribution.campaign.title }} </a> - Monto: ${{ contribution.amount|floatformat:"2u" }} - fecha: {{ contribution.created_at|date:"d/m/Y" }}</li>
     {% empty %}
         <li>Aún no has realizado aportes</li>
     {% endfor %}

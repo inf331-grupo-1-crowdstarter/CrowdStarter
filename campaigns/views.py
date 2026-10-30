@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render, get_list_or_40
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from .forms import CampaignForm, CommentForm, ContributionForm, LoginForm, RegisterForm
+from .forms import CATEGORY_SUBCATEGORIES, CampaignForm, CommentForm, ContributionForm, LoginForm, RegisterForm
 from .models import Campaign, Category, Comment, Contribution
 
 def register(request):
@@ -66,7 +66,11 @@ def protected_view(request):
     return render(request, "protected.html")
 
 def home(request):
-    return campaign_list(request)
+    Campaign.expire_overdue()
+    featured_campaigns = Campaign.objects.exclude(
+        status=Campaign.Status.BORRADOR
+    ).select_related("category")[:3]
+    return render(request, "home.html", {"featured_campaigns": featured_campaigns})
 
 
 def campaign_list(request):
@@ -104,12 +108,19 @@ def campaign_detail(request, pk):
 def campaign_create(request):
     form = CampaignForm(request.POST if request.method == "POST" else None, request.FILES or None)
     if request.method == "POST" and form.is_valid():
-        campaign = form.save(commit=False)
-        campaign.creator = request.user
-        campaign.save()
-        messages.success(request, "Campaña creada correctamente como borrador.")
-        return redirect(campaign)
-    return render(request, "campaigns/form.html", {"form": form, "heading": "Crear campaña"})
+        category = form.cleaned_data["category"]
+        subcategory = request.POST.get("subcategory", "").strip()
+        if subcategory and subcategory not in CATEGORY_SUBCATEGORIES.get(category.name, ()):
+            form.add_error("category", "Selecciona una subcategoría válida para la categoría.")
+        else:
+            campaign = form.save(commit=False)
+            campaign.creator = request.user
+            campaign.subcategory = subcategory
+            campaign.save()
+            messages.success(request, "Campaña creada correctamente como borrador.")
+            return redirect(campaign)
+    return render(request, "campaigns/form.html", {"form": form, "heading": "Crear campaña",
+        "subcategory_value": request.POST.get("subcategory", "") if request.method == "POST" else ""})
 
 
 @login_required
@@ -134,13 +145,19 @@ def campaign_edit(request, pk):
         form = CampaignForm(request.POST if request.method == "POST" else None,
                             request.FILES or None, instance=campaign)
         if request.method == "POST" and form.is_valid():
-            campaign = form.save(commit=False)
-            if campaign.status == Campaign.Status.ACTIVA and campaign.raised_amount >= campaign.funding_goal:
-                campaign.status = Campaign.Status.FINANCIADA
-            campaign.save()
-            messages.success(request, "Campaña actualizada correctamente.")
-            return redirect(campaign)
-    return render(request, "campaigns/form.html", {"form": form, "campaign": campaign, "heading": "Editar campaña"})
+            subcategory = request.POST.get("subcategory", "").strip()
+            if subcategory and subcategory not in CATEGORY_SUBCATEGORIES.get(form.cleaned_data["category"].name, ()):
+                form.add_error("category", "Selecciona una subcategoría válida para la categoría.")
+            else:
+                campaign = form.save(commit=False)
+                campaign.subcategory = subcategory
+                if campaign.status == Campaign.Status.ACTIVA and campaign.raised_amount >= campaign.funding_goal:
+                    campaign.status = Campaign.Status.FINANCIADA
+                campaign.save()
+                messages.success(request, "Campaña actualizada correctamente.")
+                return redirect(campaign)
+    return render(request, "campaigns/form.html", {"form": form, "campaign": campaign, "heading": "Editar campaña",
+        "subcategory_value": request.POST.get("subcategory", campaign.subcategory) if request.method == "POST" else campaign.subcategory})
 
 
 @login_required

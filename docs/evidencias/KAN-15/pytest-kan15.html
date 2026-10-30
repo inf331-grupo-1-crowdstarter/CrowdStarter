@@ -1,0 +1,21 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Registro real de pytest</title><body><h1>Registro local de pytest — kan15</h1><p>Salida real del comando, presentada en el navegador para captura. Registro completo en el archivo TXT.</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere">============================= test session starts ==============================
+platform linux -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0 -- CrowdStarter/.venv/bin/python
+cachedir: .pytest_cache
+django: version: 6.1.2, settings: crowdstarter.settings (from ini)
+rootdir: CrowdStarter
+configfile: pytest.ini
+plugins: django-4.14.0
+collecting ... collected 20 items
+
+campaigns/tests/test_kan15.py::test_cp05_campaign_status[FINANCIADA-1-False-403] PASSED [ 55%]
+campaigns/tests/test_kan15.py::test_cp05_campaign_status[NO_FINANCIADA-1-False-403] PASSED [ 60%]
+campaigns/tests/test_kan15.py::test_cp05_campaign_status[ACTIVA--1-False-403] PASSED [ 65%]
+campaigns/tests/test_kan15.py::test_cp06_anonymous_write PASSED          [ 70%]
+campaigns/tests/test_kan15.py::test_cp07_identifier_permissions PASSED   [ 75%]
+campaigns/tests/test_kan15.py::test_cp08_missing_or_private PASSED       [ 80%]
+campaigns/tests/test_kan15.py::test_cp09_http_methods PASSED             [ 85%]
+campaigns/tests/test_kan15.py::test_cp10_csrf PASSED                     [ 90%]
+campaigns/tests/test_kan15.py::test_cp11_cp13_ui_and_contribution_error PASSED [ 95%]
+campaigns/tests/test_kan15.py::test_cp12_xss_unicode_and_errors PASSED   [100%]
+
+============================= 20 passed in 10.23s ==============================</pre></body></html>

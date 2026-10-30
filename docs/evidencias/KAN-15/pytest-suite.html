@@ -1,0 +1,21 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><title>Registro real de pytest</title><body><h1>Registro local de pytest — suite</h1><p>Salida real del comando, presentada en el navegador para captura. Registro completo en el archivo TXT.</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere">============================= test session starts ==============================
+platform linux -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0 -- CrowdStarter/.venv/bin/python
+cachedir: .pytest_cache
+django: version: 6.1.2, settings: crowdstarter.settings (from ini)
+rootdir: CrowdStarter
+configfile: pytest.ini
+plugins: django-4.14.0
+collecting ... collected 117 items
+
+campaigns/tests/test_kan9.py::test_publication_explicit_owner_post_only PASSED [ 92%]
+campaigns/tests/test_login.py::test_login_correcto_inicia_sesion_y_redirige_inicio PASSED [ 93%]
+campaigns/tests/test_login.py::test_login_incorrecto_muestra_mensaje_generico PASSED [ 94%]
+campaigns/tests/test_login.py::test_logout_cierra_sesion_y_redirige_inicio PASSED [ 94%]
+campaigns/tests/test_login.py::test_funcion_protegida_redirige_login_y_retorna_despues PASSED [ 95%]
+campaigns/tests/test_login.py::test_usuario_autenticado_no_puede_acceder_login PASSED [ 96%]
+campaigns/tests/test_register.py::test_registro_valido_crea_usuario_y_redirige_a_login PASSED [ 97%]
+campaigns/tests/test_register.py::test_registro_rechaza_correo_duplicado PASSED [ 98%]
+campaigns/tests/test_register.py::test_registro_rechaza_datos_invalidos PASSED [ 99%]
+campaigns/tests/test_register.py::test_usuario_autenticado_no_puede_acceder_al_registro PASSED [100%]
+
+============================= 117 passed in 37.93s =============================</pre></body></html>

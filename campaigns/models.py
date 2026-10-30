@@ -24,6 +24,7 @@ class Campaign(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    subcategory = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to="campaigns/", blank=True)
     funding_goal = models.DecimalField(max_digits=12, decimal_places=2)
     deadline = models.DateField()

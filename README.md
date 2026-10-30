@@ -57,13 +57,7 @@ python -m pip install -r requirements.txt
 python manage.py migrate
 ```
 
-### 5. Crear categorías iniciales
-
-```bash
-python manage.py shell -c "from campaigns.models import Category; [Category.objects.get_or_create(name=n) for n in ['Tecnología', 'Arte', 'Comunidad']]"
-```
-
-### 6. Ejecutar la aplicación
+### 5. Ejecutar la aplicación
 
 ```bash
 python manage.py runserver

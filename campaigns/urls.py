@@ -25,8 +25,9 @@ urlpatterns += [path("campanas/<int:pk>/eliminar/", views.campaign_delete, name=
 
 urlpatterns += [path("campanas/<int:pk>/aportar/", views.campaign_contribute, name="campaign_contribute")]
 
-
 urlpatterns += [
     path("campanas/<int:pk>/comentarios/", views.comment_create, name="comment_create"),
     path("campanas/<int:pk>/comentarios/<int:comment_pk>/eliminar/", views.comment_delete, name="comment_delete"),
 ]
+
+urlpatterns += [path("campanas/panel_del_creador/", views.creator_panel, name="creator_panel")]

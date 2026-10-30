@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block content %}
+
+<h1>Panel del Creador</h1>
+<ul>
+    {% for campaign in campaigns %}
+        <li>{{ campaign.title }} - estado: {{ campaign.get_status_display }} - recaudado: ${{ campaign.raised_amount }} - meta: ${{ campaign.funding_goal }} - <a href="{% url 'campaign_detail' campaign.id %}" class="btn btn-primary">Ver</a> - <a href="{% url 'campaign_edit' campaign.id %}" class="btn btn-secondary">Editar</a> - <a href="{% url 'campaign_delete' campaign.id %}" class="btn btn-danger">Eliminar</a></li>
+    {% empty %}
+        <li>Aún no has creado campañas - <a href="{% url 'campaign_create' %}" class="btn btn-primary">Crear campaña</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

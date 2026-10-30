@@ -229,3 +229,8 @@ def comment_delete(request, pk, comment_pk):
 def creator_panel(request):
     campaigns = Campaign.objects.filter(creator=request.user).order_by("-created_at")
     return render(request, "campaigns/creator_panel.html", {"campaigns": campaigns})
+
+@login_required
+def user_contribution_history(request):
+    contributions = Contribution.objects.filter(user=request.user).select_related("campaign").order_by("-created_at")
+    return render(request, "user/contribution_history.html", {"contributions": contributions})

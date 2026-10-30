@@ -31,3 +31,4 @@ urlpatterns += [
 ]
 
 urlpatterns += [path("campanas/panel_del_creador/", views.creator_panel, name="creator_panel")]
+urlpatterns += [path("mis-aportes/", views.user_contribution_history, name="user_history_contributions")]

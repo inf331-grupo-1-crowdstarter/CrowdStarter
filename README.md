@@ -80,3 +80,4 @@ Para verificar la configuración del proyecto Django:
 ```bash
 python manage.py check
 ```
+hola

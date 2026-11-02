@@ -13,6 +13,7 @@ y confianza entre creadores y aportantes.
 - 📦 [Repositorio principal](https://github.com/inf331-grupo-1-crowdstarter/CrowdStarter)
 - 📚 [Wiki del proyecto](https://github.com/inf331-grupo-1-crowdstarter/CrowdStarter/wiki)
 - 🎥 Video Entrega 1: https://youtu.be/dKeZFzO4w8g
+- 🎥 Video Entrega 2: https://www.youtube.com/watch?v=hXCo6FFA-T8
 
 ## 👥 Equipo
 | Integrante | Rol |

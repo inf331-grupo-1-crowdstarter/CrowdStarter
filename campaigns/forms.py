@@ -1,11 +1,25 @@
 from decimal import Decimal
+import json
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from .models import Campaign, Comment
+from .models import Campaign, Category, Comment
+
+CATEGORY_SUBCATEGORIES = {
+    "Tecnología e Innovación": (
+        "Tecnología de Consumo", "Hardware y Software", "Impresión 3D y Robótica",
+    ),
+    "Arte y Cultura": (
+        "Cine y Video", "Música", "Publicación y Literatura", "Artes Visuales", "Teatro",
+    ),
+    "Entretenimiento y Juegos": ("Juegos", "Experiencias Interactivas", "Cómics"),
+    "Diseño y Estilo de Vida": ("Moda", "Diseño de Productos", "Gastronomía"),
+    "Negocios, Finanzas e Impacto": ("Emprendimiento", "Finanzas", "Innovación Social"),
+    "Causas Sociales y Comunidad": ("Medioambiente", "Educación", "Comunidad"),
+}
 
 
 class RegisterForm(UserCreationForm):
@@ -23,6 +37,16 @@ class RegisterForm(UserCreationForm):
 
         return email
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"].label = "Correo electrónico"
+        self.fields["password1"].label = "Contraseña"
+        self.fields["password2"].label = "Confirmar contraseña"
+        for field in self.fields.values():
+            field.help_text = ""
+            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs["placeholder"] = field.label
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.username = self.cleaned_data["email"].lower()
@@ -37,7 +61,7 @@ class LoginForm(AuthenticationForm):
     username = forms.EmailField(
         label="Correo electrónico",
         widget=forms.EmailInput(
-            attrs={"autocomplete": "email"}
+            attrs={"autocomplete": "email", "class": "form-control", "placeholder": "Correo electrónico"}
         ),
     )
 
@@ -45,6 +69,14 @@ class LoginForm(AuthenticationForm):
         "invalid_login": "Correo o contraseña incorrectos.",
         "inactive": "Esta cuenta está inactiva.",
     }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].label = "Correo electrónico"
+        self.fields["password"].label = "Contraseña"
+        self.fields["password"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Contraseña", "autocomplete": "current-password"}
+        )
 
 
 
@@ -58,8 +90,15 @@ class CampaignForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        category_name = self.instance.category.name if self.instance.pk else ""
+        category_id = self.data.get("category") if self.is_bound else None
+        if category_id:
+            category_name = Category.objects.filter(pk=category_id).values_list("name", flat=True).first() or ""
         for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs["class"] = "form-control rounded-xl"
+            field.widget.attrs["placeholder"] = field.label
+        self.fields["description"].widget.attrs.update({"rows": 5, "placeholder": "Describe tu idea y el impacto que buscas..."})
+        self.fields["category"].widget.attrs["data-subcategories"] = json.dumps(CATEGORY_SUBCATEGORIES, ensure_ascii=False)
 
     def clean_funding_goal(self):
         goal = self.cleaned_data["funding_goal"]
@@ -89,7 +128,7 @@ class CampaignForm(forms.ModelForm):
 class ContributionForm(forms.Form):
     amount = forms.DecimalField(label="Monto del aporte simulado", max_digits=12, decimal_places=2,
                                 min_value=Decimal("0.01"),
-                                widget=forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}))
+                                widget=forms.NumberInput(attrs={"class": "form-control rounded-xl", "step": "0.01", "placeholder": "Monto del aporte"}))
 
 
 class CommentForm(forms.ModelForm):

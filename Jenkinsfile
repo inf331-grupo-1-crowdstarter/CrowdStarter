@@ -16,6 +16,14 @@ pipeline {
     }
 
     stages {
+        stage('Limpiar reportes anteriores') {
+            steps {
+                dir('reports') {
+                    deleteDir()
+                }
+            }
+        }
+
         stage('Instalar dependencias') {
             steps {
                 sh '''

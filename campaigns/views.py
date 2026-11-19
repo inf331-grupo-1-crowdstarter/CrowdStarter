@@ -125,18 +125,7 @@ def campaign_create(request):
 
 @login_required
 @require_POST
-def campaign_publish(request, pk):
-    campaign = get_object_or_404(Campaign, pk=pk, creator=request.user)
-    if campaign.status != Campaign.Status.BORRADOR or campaign.deadline <= timezone.localdate():
-        return HttpResponseForbidden("Solo se puede publicar un borrador con fecha futura.")
-    campaign.status = Campaign.Status.ACTIVA
-    campaign.save(update_fields=["status", "updated_at"])
-    messages.success(request, "Campaña publicada.")
-    return redirect(campaign)
-
-
-@login_required
-def campaign_edit(request, pk):
+def comment_create(request, pk):
     Campaign.expire_overdue()
     with transaction.atomic():
         campaign = get_object_or_404(Campaign.objects.select_for_update(), pk=pk, creator=request.user)
@@ -161,19 +150,8 @@ def campaign_edit(request, pk):
 
 
 @login_required
-def campaign_delete(request, pk):
-    with transaction.atomic():
-        campaign = get_object_or_404(Campaign.objects.select_for_update(), pk=pk, creator=request.user)
-        if request.method == "POST":
-            if campaign.contributions.exists():
-                return HttpResponseForbidden("No puedes eliminar una campaña con aportes.")
-            campaign.delete()
-            messages.success(request, "Campaña eliminada correctamente.")
-            return redirect("campaign_list")
-    return render(request, "campaigns/confirm_delete.html", {"campaign": campaign})
-
-
-def campaign_contribute(request, pk):
+@require_POST
+def comment_delete(request, pk, comment_pk):
     campaign = get_object_or_404(Campaign, pk=pk)
     if campaign.status == Campaign.Status.BORRADOR and campaign.creator_id != request.user.pk:
         raise Http404

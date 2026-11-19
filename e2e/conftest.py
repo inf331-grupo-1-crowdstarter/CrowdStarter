@@ -1,6 +1,7 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import pytest
 from django.contrib.auth.models import User
@@ -12,6 +13,52 @@ from campaigns.models import Campaign, Category
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 E2E_PASSWORD = "E2ePassword123!"
+
+
+def pytest_configure(config):
+    base_url = os.environ.get("BASE_URL")
+    if base_url is None:
+        return
+
+    message = (
+        "BASE_URL debe ser http://localhost:PUERTO o http://127.0.0.1:PUERTO "
+        "(1-65535), sin ruta, credenciales, consulta ni fragmento. "
+        "PyTest inicia su propio servidor con una base de datos temporal."
+    )
+    try:
+        url = urlsplit(base_url)
+        port = url.port
+    except ValueError as exc:
+        raise pytest.UsageError(message) from exc
+    if (
+        url.scheme != "http"
+        or url.hostname not in {"localhost", "127.0.0.1"}
+        or not port
+        or url.username is not None
+        or url.password is not None
+        or url.path not in {"", "/"}
+        or "?" in base_url
+        or "#" in base_url
+        or base_url != base_url.strip()
+    ):
+        raise pytest.UsageError(message)
+
+    address = f"{url.hostname}:{port}"
+    for existing in (
+        config.getoption("liveserver"),
+        os.environ.get("DJANGO_LIVE_TEST_SERVER_ADDRESS"),
+    ):
+        if existing and existing != address:
+            raise pytest.UsageError(
+                "BASE_URL contradice --liveserver o DJANGO_LIVE_TEST_SERVER_ADDRESS. "
+                "Utiliza una sola dirección para el servidor E2E."
+            )
+    config.option.liveserver = address
+
+
+@pytest.fixture(scope="session")
+def e2e_base_url(live_server):
+    return live_server.url
 
 
 @pytest.fixture

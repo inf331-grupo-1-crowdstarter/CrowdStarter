@@ -18,7 +18,7 @@ def test_e2e01_register_and_login(page, e2e_base_url):
     page.goto(f"{e2e_base_url}/registro/")
     page.get_by_label("Correo electrónico").fill("new-user@example.com")
     page.locator("#id_password1").fill("NewPassword123!")
-    page.locator("#id_password2").fill("NewPassword123!")
+    #page.locator("#id_password2").fill("NewPassword123!")
     page.get_by_role("button", name="Crear cuenta").click()
 
     expect(page).to_have_url(re.compile(r".*/login/"))

@@ -1,1 +1,44 @@
-{% extends "base.html" %}{% block content %}<h1>{{ heading }}</h1><form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<p class="text-muted">La imagen es opcional. Si hay errores, vuelve a seleccionar el archivo por seguridad del navegador.</p><button class="btn btn-primary">Guardar</button> <a href="{% if campaign %}{{ campaign.get_absolute_url }}{% else %}{% url 'campaign_list' %}{% endif %}">Cancelar</a></form>{% endblock %}
+{% extends "base.html" %}
+{% block content %}
+<section class="form-page">
+    <div class="mb-4"><span class="eyebrow eyebrow-dark">CAMPAÑAS</span><h1 class="section-title mt-2">{{ heading }}</h1><p class="text-muted">Comparte tu idea con una comunidad que quiere hacerla realidad.</p></div>
+    <form method="post" enctype="multipart/form-data" class="card p-4 p-md-5 form-stack">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-field">
+                {{ field.label_tag }}{{ field }}
+                {% if field.help_text %}<small class="form-help">{{ field.help_text }}</small>{% endif %}
+                {% if field.errors %}<ul class="errorlist">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            {% if field.name == "category" %}
+            <div class="form-field">
+                <label for="id_subcategory">Subcategoría</label>
+                <select class="form-select rounded-xl" id="id_subcategory" name="subcategory" data-selected="{{ subcategory_value|default:'' }}">
+                    <option value="">Selecciona una subcategoría</option>
+                </select>
+                <small class="form-help">La subcategoría describe tu idea; la búsqueda se realiza por categoría.</small>
+            </div>
+            {% endif %}
+        {% endfor %}
+        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+        <p class="form-help">La imagen es opcional. Si hay errores, vuelve a seleccionar el archivo por seguridad del navegador.</p>
+        <div class="d-flex flex-wrap gap-2"><button class="btn btn-primary" type="submit">Guardar campaña</button><a class="btn btn-outline-secondary" href="{% if campaign %}{{ campaign.get_absolute_url }}{% else %}{% url 'campaign_list' %}{% endif %}">Cancelar</a></div>
+    </form>
+</section>
+<script>
+    const categoryField = document.getElementById("id_category");
+    const subcategoryField = document.getElementById("id_subcategory");
+    const subcategories = JSON.parse(categoryField.dataset.subcategories);
+    const selectedSubcategory = "{{ subcategory_value|default:''|escapejs }}";
+    function updateSubcategories() {
+        const values = subcategories[categoryField.options[categoryField.selectedIndex]?.text] || [];
+        subcategoryField.innerHTML = '<option value="">Selecciona una subcategoría</option>';
+        values.forEach((value) => {
+            const option = new Option(value, value, false, value === selectedSubcategory);
+            subcategoryField.add(option);
+        });
+    }
+    categoryField.addEventListener("change", updateSubcategories);
+    updateSubcategories();
+</script>
+{% endblock %}

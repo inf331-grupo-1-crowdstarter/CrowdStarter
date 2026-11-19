@@ -1,0 +1,30 @@
+<section id="actualizaciones" class="card p-3 mb-3" aria-labelledby="updates-heading">
+  <h2 id="updates-heading" class="h4">Actualizaciones del creador</h2>
+  {% if user.pk == campaign.creator_id %}
+    {% if campaign.can_publish_updates %}
+      <p><a class="btn btn-primary" href="{% url 'update_create' campaign.pk %}">Publicar actualización</a></p>
+    {% else %}
+      <p class="text-muted">Solo puedes publicar actualizaciones en campañas activas o financiadas.</p>
+    {% endif %}
+  {% endif %}
+  {% for update in campaign.display_updates %}
+    <article class="border-top pt-3 mb-3" id="actualizacion-{{ update.pk }}" style="overflow-wrap:anywhere">
+      <h3 class="h5">{{ update.title }}</h3>
+      <p><strong>{{ update.author.username }}</strong>
+        <time class="text-muted" datetime="{{ update.created_at|date:'c' }}">{{ update.created_at|date:"d/m/Y H:i" }}</time>
+      </p>
+      <div>{{ update.content|linebreaks }}</div>
+      {% if user.pk == campaign.creator_id and user.pk == update.author_id %}
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-secondary btn-sm" href="{% url 'update_edit' campaign.pk update.pk %}">Editar actualización</a>
+          <form method="post" action="{% url 'update_delete' campaign.pk update.pk %}">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger btn-sm">Eliminar actualización</button>
+          </form>
+        </div>
+      {% endif %}
+    </article>
+  {% empty %}
+    <p>Aún no hay actualizaciones para esta campaña.</p>
+  {% endfor %}
+</section>

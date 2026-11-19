@@ -1,0 +1,31 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.7, pytest-9.1.1, pluggy-1.6.0 -- CrowdStarter/.venv/bin/python
+cachedir: .pytest_cache
+django: version: 6.1.2, settings: crowdstarter.settings (from ini)
+rootdir: CrowdStarter
+configfile: pytest.ini
+plugins: django-4.14.0
+collecting ... collected 20 items
+
+campaigns/tests/test_kan15.py::test_cp01_publish_association[False] PASSED [  5%]
+campaigns/tests/test_kan15.py::test_cp01_publish_association[True] PASSED [ 10%]
+campaigns/tests/test_kan15.py::test_cp02_public_order_isolation PASSED   [ 15%]
+campaigns/tests/test_kan15.py::test_cp03_delete_own PASSED               [ 20%]
+campaigns/tests/test_kan15.py::test_cp04_content_boundaries[-False] PASSED [ 25%]
+campaigns/tests/test_kan15.py::test_cp04_content_boundaries[ \t\n\u2003 -False] PASSED [ 30%]
+campaigns/tests/test_kan15.py::test_cp04_content_boundaries[a-True] PASSED [ 35%]
+campaigns/tests/test_kan15.py::test_cp04_content_boundaries[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-True] PASSED [ 40%]
+campaigns/tests/test_kan15.py::test_cp04_content_boundaries[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-False] PASSED [ 45%]
+campaigns/tests/test_kan15.py::test_cp05_campaign_status[BORRADOR-1-True-403] PASSED [ 50%]
+campaigns/tests/test_kan15.py::test_cp05_campaign_status[FINANCIADA-1-False-403] PASSED [ 55%]
+campaigns/tests/test_kan15.py::test_cp05_campaign_status[NO_FINANCIADA-1-False-403] PASSED [ 60%]
+campaigns/tests/test_kan15.py::test_cp05_campaign_status[ACTIVA--1-False-403] PASSED [ 65%]
+campaigns/tests/test_kan15.py::test_cp06_anonymous_write PASSED          [ 70%]
+campaigns/tests/test_kan15.py::test_cp07_identifier_permissions PASSED   [ 75%]
+campaigns/tests/test_kan15.py::test_cp08_missing_or_private PASSED       [ 80%]
+campaigns/tests/test_kan15.py::test_cp09_http_methods PASSED             [ 85%]
+campaigns/tests/test_kan15.py::test_cp10_csrf PASSED                     [ 90%]
+campaigns/tests/test_kan15.py::test_cp11_cp13_ui_and_contribution_error PASSED [ 95%]
+campaigns/tests/test_kan15.py::test_cp12_xss_unicode_and_errors PASSED   [100%]
+
+============================= 20 passed in 10.23s ==============================

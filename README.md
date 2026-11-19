@@ -70,6 +70,12 @@ La aplicación estará disponible en:
 
 ## 🧪 Pruebas automatizadas
 
+Con el entorno virtual activado, instala el navegador para las pruebas E2E:
+
+```bash
+python -m playwright install chromium
+```
+
 Para ejecutar toda la suite de pruebas:
 
 ```bash
@@ -81,3 +87,19 @@ Para verificar la configuración del proyecto Django:
 ```bash
 python manage.py check
 ```
+
+### Pruebas E2E y BASE_URL
+
+```bash
+python -m pytest e2e -v
+```
+
+Para elegir su dirección en Linux o Jenkins:
+
+```bash
+BASE_URL=http://127.0.0.1:8016 python -m pytest e2e -v
+```
+
+
+`BASE_URL` configura el servidor temporal, no una aplicación ya desplegada.
+Admite HTTP, `localhost` o `127.0.0.1`, y un puerto explícito libre entre 1 y 65535. Si el puerto está ocupado, la ejecución falla.

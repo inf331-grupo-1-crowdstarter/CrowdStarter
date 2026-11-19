@@ -13,6 +13,7 @@ pipeline {
 
     environment {
         PLAYWRIGHT_BROWSERS_PATH = "${env.JENKINS_HOME}/playwright-browsers"
+        BASE_URL = 'http://127.0.0.1:8016'
     }
 
     stages {

@@ -1,21 +1,17 @@
-{% extends "base.html" %}
-{% block title %}Crear cuenta | CrowdStarter{% endblock %}
-{% block content %}
-<section class="card auth-card p-4 p-md-5">
-    <h1 class="section-title">Crear cuenta</h1>
-    <p class="text-muted mb-4">Únete a la comunidad que impulsa nuevas ideas.</p>
-    <form method="post" class="form-stack">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro | CrowdStarter</title>
+</head>
+<body>
+    <h1>Crear cuenta</h1>
+
+    <form method="post">
         {% csrf_token %}
-        {% for field in form %}
-            <div class="form-field">
-                {{ field.label_tag }}
-                {{ field }}
-                {% if field.name == "password1" %}<small class="form-help">Usa al menos 8 caracteres, evita contraseñas comunes y combina letras y números.</small>{% endif %}
-                {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-            </div>
-        {% endfor %}
-        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
-        <button class="btn btn-primary w-100" type="submit">Crear cuenta</button>
+        {{ form.as_p }}
+
+        <button type="submit">Registrarse</button>
     </form>
-</section>
-{% endblock %}
+</body>
+</html>

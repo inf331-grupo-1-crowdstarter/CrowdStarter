@@ -12,8 +12,7 @@ y confianza entre creadores y aportantes.
 ## 🔗 Enlaces
 - 📦 [Repositorio principal](https://github.com/inf331-grupo-1-crowdstarter/CrowdStarter)
 - 📚 [Wiki del proyecto](https://github.com/inf331-grupo-1-crowdstarter/CrowdStarter/wiki)
-- 🎥 Video Entrega 1: https://youtu.be/dKeZFzO4w8g
-- 🎥 Video Entrega 2: https://www.youtube.com/watch?v=hXCo6FFA-T8
+- 🎥 Video Entrega 1: _(pendiente)_
 
 ## 👥 Equipo
 | Integrante | Rol |
@@ -58,7 +57,13 @@ python -m pip install -r requirements.txt
 python manage.py migrate
 ```
 
-### 5. Ejecutar la aplicación
+### 5. Crear categorías iniciales
+
+```bash
+python manage.py shell -c "from campaigns.models import Category; [Category.objects.get_or_create(name=n) for n in ['Tecnología', 'Arte', 'Comunidad']]"
+```
+
+### 6. Ejecutar la aplicación
 
 ```bash
 python manage.py runserver
@@ -69,12 +74,6 @@ La aplicación estará disponible en:
 `http://127.0.0.1:8000/`
 
 ## 🧪 Pruebas automatizadas
-
-Con el entorno virtual activado, instala el navegador para las pruebas E2E:
-
-```bash
-python -m playwright install chromium
-```
 
 Para ejecutar toda la suite de pruebas:
 
@@ -87,19 +86,3 @@ Para verificar la configuración del proyecto Django:
 ```bash
 python manage.py check
 ```
-
-### Pruebas E2E y BASE_URL
-
-```bash
-python -m pytest e2e -v
-```
-
-Para elegir su dirección en Linux o Jenkins:
-
-```bash
-BASE_URL=http://127.0.0.1:8016 python -m pytest e2e -v
-```
-
-
-`BASE_URL` configura el servidor temporal, no una aplicación ya desplegada.
-Admite HTTP, `localhost` o `127.0.0.1`, y un puerto explícito libre entre 1 y 65535. Si el puerto está ocupado, la ejecución falla.

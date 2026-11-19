@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import update_views, views
+from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -25,16 +25,9 @@ urlpatterns += [path("campanas/<int:pk>/eliminar/", views.campaign_delete, name=
 
 urlpatterns += [path("campanas/<int:pk>/aportar/", views.campaign_contribute, name="campaign_contribute")]
 
+urlpatterns += [path("campanas/panel_del_creador/", views.creator_panel, name="creator_panel")]
+
 urlpatterns += [
     path("campanas/<int:pk>/comentarios/", views.comment_create, name="comment_create"),
     path("campanas/<int:pk>/comentarios/<int:comment_pk>/eliminar/", views.comment_delete, name="comment_delete"),
-]
-
-urlpatterns += [path("campanas/panel_del_creador/", views.creator_panel, name="creator_panel")]
-urlpatterns += [path("mis-aportes/", views.user_contribution_history, name="user_history_contributions")]
-
-urlpatterns += [
-    path("campanas/<int:pk>/actualizaciones/crear/", update_views.update_create, name="update_create"),
-    path("campanas/<int:pk>/actualizaciones/<int:update_pk>/editar/", update_views.update_edit, name="update_edit"),
-    path("campanas/<int:pk>/actualizaciones/<int:update_pk>/eliminar/", update_views.update_delete, name="update_delete"),
 ]
